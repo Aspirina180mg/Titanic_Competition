@@ -1,9 +1,10 @@
 import subprocess
 import importlib
-import pandas as pd
 import gzip
 import json
 import ast
+import pandas as pd
+
 
 
 def install(packages):
@@ -242,7 +243,8 @@ def unique_count_all(df, column_name): #todo modify docsrting
 
 def unique_count_list(df, column_name):
     """
-    Prints the total number of unique values and an alphabetical list of all unique values in a specified column.
+    Prints the total number of unique values and an alphabetical list of all 
+    unique values in a specified column.
 
     Args:
         df (DataFrame): The DataFrame to analyze.
@@ -263,7 +265,7 @@ def unique_count_list(df, column_name):
         # Print the total number of unique values and the list
         total_unique = len(sorted_unique_values)
         print(f"\nTotal unique values in '{column_name}': {total_unique}")
-        print(f"Unique values in order:")
+        print("Unique values in order:")
         for value in sorted_unique_values:
             print(value)
     else:
