@@ -137,11 +137,12 @@ def df_info(df, df_name="Unnamed_DataFrame"):
     )
     print(f"---Duplicated values: {df.duplicated().sum()}")
     print(f"---Fully empty rows: {df.isnull().all(axis=1).sum()}")
-    print(f"\n---Dataframe head:\n{df.head(3).to_string()}")
     print("\n---Dataframe info:\n")
     df.info()
-    print(f"\n----Dataframe description:\n{df.describe().to_string()}")
     print(f"\n---Missing values:\n{df.isna().sum()}")
+    print(f"\n---Dataframe head:\n{df.head(3).to_string()}")
+    print(f"\n----Dataframe description:\n{df.describe().to_string()}")
+    
 
 
 def df_clean(df, df_name="Unnamed_DataFrame"):
@@ -186,16 +187,29 @@ def column_unique(df):
         if unique_counted == len(df[column]):
             print(f"Column: {column} - All values are different")
         else:
-            sorted_values = sorted(unique_values, key=str)
+            # Separate numerical and non-numerical values
+            numerical_values = [value for value in unique_values if isinstance(value, (int, float))]
+            non_numerical_values = [value for value in unique_values if not isinstance(value, (int, float))]
+
+            # Sort numerical values
+            numerical_values.sort()
+
+            # Sort non-numerical values
+            non_numerical_values.sort()
+
+            # Combine sorted numerical and non-numerical values
+            sorted_values = numerical_values + non_numerical_values
+
             print(
                 f"Column: {column} - Unique values: {', '.join(map(str, sorted_values))}"
             )
         print("-" * 50)
 
 
-def unique_count(df, column_name):  # todo modify docstring
+def unique_count(df, column_name):
     """
     Prints the count and percentage of unique values in a specified column.
+    If there are more than 10 unique values, it shows only the top 10 and their cumulative percentage.
 
     Args:
         df (DataFrame): The DataFrame to analyze.
@@ -211,11 +225,15 @@ def unique_count(df, column_name):  # todo modify docstring
         # Get the top 10 most frequent values
         top_10_values = value_counts.head(10)
 
+        # Calculate the cumulative percentage of the top 10 values
+        cumulative_percentage = (top_10_values.sum() / total_count) * 100
+
         # Check if the number of unique values exceeds 10
         if len(value_counts) > 10:
             print(
                 f"\nUnique values in '{column_name}' (total {total_count}) - Showing only the first 10 values:"
             )
+            print(f"Cumulative percentage of top 10 values: {cumulative_percentage:.2f}%")
         else:
             print(f"\nUnique values in '{column_name}' (total {total_count}):")
 
@@ -224,6 +242,7 @@ def unique_count(df, column_name):  # todo modify docstring
             print(f"{value}: {count} times ({percentage:.2f}%)")
     else:
         print(f"Column '{column_name}' does not exist in the DataFrame.")
+
 
 
 def unique_count_all(df, column_name):  # todo modify docsrting
