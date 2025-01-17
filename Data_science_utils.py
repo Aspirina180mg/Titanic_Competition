@@ -85,6 +85,7 @@ def extract(file_path):
         - CSV
         - JSON (gzip compressed or plain)
         - AST Gzip
+        - Parquet
 
     Args:
         file_path (str): The path to the file.
@@ -109,6 +110,9 @@ def extract(file_path):
                 data = [ast.literal_eval(row.decode("utf-8")) for row in file]
             df = pd.DataFrame(data)
             print("AST Gzip data extraction successful.")
+        elif file_path.endswith(".parquet"):
+            df = pd.read_parquet(file_path)
+            print("Parquet data extraction successful.")
         else:
             print(f"Unsupported file format: {file_path}")
             return None
