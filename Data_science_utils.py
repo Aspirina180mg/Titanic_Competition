@@ -6,7 +6,6 @@ import ast
 import pandas as pd
 
 
-
 def install(packages):
     """
     Installs Python packages using pip and summarizes the installation status.
@@ -25,7 +24,7 @@ def install(packages):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                check=True
+                check=True,
             )
 
             if "Requirement already satisfied" in result.stdout:
@@ -133,7 +132,9 @@ def df_info(df, df_name="Unnamed_DataFrame"):
         df_name (str): Optional name of the DataFrame for display.
     """
     line_length = max(64, len(df_name) + 10)
-    print(f"\n---Info-{df_name.replace(' ', '-')}{'-' * (line_length - len(df_name) - 10)}")
+    print(
+        f"\n---Info-{df_name.replace(' ', '-')}{'-' * (line_length - len(df_name) - 10)}"
+    )
     print(f"---Duplicated values: {df.duplicated().sum()}")
     print(f"---Fully empty rows: {df.isnull().all(axis=1).sum()}")
     print(f"\n---Dataframe head:\n{df.head(3).to_string()}")
@@ -152,7 +153,9 @@ def df_clean(df, df_name="Unnamed_DataFrame"):
         df_name (str): Optional name of the DataFrame for display.
     """
     line_length = max(60, len(df_name) + 10)
-    print(f"\n---Cleaning-{df_name.replace(' ', '-')}{'-' * (line_length - len(df_name) - 10)}")
+    print(
+        f"\n---Cleaning-{df_name.replace(' ', '-')}{'-' * (line_length - len(df_name) - 10)}"
+    )
 
     # Remove duplicates
     duplicates_before = df.duplicated().sum()
@@ -184,11 +187,13 @@ def column_unique(df):
             print(f"Column: {column} - All values are different")
         else:
             sorted_values = sorted(unique_values, key=str)
-            print(f"Column: {column} - Unique values: {', '.join(map(str, sorted_values))}")
+            print(
+                f"Column: {column} - Unique values: {', '.join(map(str, sorted_values))}"
+            )
         print("-" * 50)
 
 
-def unique_count(df, column_name): #todo modify docstring
+def unique_count(df, column_name):  # todo modify docstring
     """
     Prints the count and percentage of unique values in a specified column.
 
@@ -208,7 +213,9 @@ def unique_count(df, column_name): #todo modify docstring
 
         # Check if the number of unique values exceeds 10
         if len(value_counts) > 10:
-            print(f"\nUnique values in '{column_name}' (total {total_count}) - Showing only the first 10 values:")
+            print(
+                f"\nUnique values in '{column_name}' (total {total_count}) - Showing only the first 10 values:"
+            )
         else:
             print(f"\nUnique values in '{column_name}' (total {total_count}):")
 
@@ -219,8 +226,7 @@ def unique_count(df, column_name): #todo modify docstring
         print(f"Column '{column_name}' does not exist in the DataFrame.")
 
 
-
-def unique_count_all(df, column_name): #todo modify docsrting
+def unique_count_all(df, column_name):  # todo modify docsrting
     """
     Prints the count and percentage of unique values in a specified column.
 
@@ -245,9 +251,10 @@ def unique_count_all(df, column_name): #todo modify docsrting
     else:
         print(f"Column '{column_name}' does not exist in the DataFrame.")
 
+
 def unique_count_list(df, column_name):
     """
-    Prints the total number of unique values and an alphabetical list of all 
+    Prints the total number of unique values and an alphabetical list of all
     unique values in a specified column.
 
     Args:
