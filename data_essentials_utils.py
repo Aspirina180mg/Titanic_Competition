@@ -2,9 +2,9 @@
 """
 data_essentials_utils.py
 
-This utility module provides various functions to assist with common tasks in 
-Data Science projects. The functions include package installation, package 
-importing with aliases where available, data extraction from multiple formats, 
+This utility module provides various functions to assist with common tasks in
+Data Science projects. The functions include package installation, package
+importing with aliases where available, data extraction from multiple formats,
 and several DataFrame analysis and cleaning methods.
 
 Functions:
@@ -15,15 +15,15 @@ Functions:
         Imports a list of Python packages with predefined aliases where available.
 
     extract(file_path):
-        Extracts data from various file formats (CSV, JSON, AST Gzip, Parquet) 
+        Extracts data from various file formats (CSV, JSON, AST Gzip, Parquet)
         into a DataFrame.
 
     df_info(df, df_name="Unnamed_DataFrame"):
-        Prints useful information about a DataFrame, including duplicates, missing 
+        Prints useful information about a DataFrame, including duplicates, missing
         values, and summary statistics.
 
     df_clean(df, df_name="Unnamed_DataFrame"):
-        Cleans a DataFrame by removing duplicates, fully empty rows, and resetting 
+        Cleans a DataFrame by removing duplicates, fully empty rows, and resetting
         the index.
 
     column_unique(df):
@@ -36,17 +36,29 @@ Functions:
         Prints the count and percentage of all unique values in a specified column.
 
     unique_count_list(df, column_name):
-        Prints the total number of unique values and an alphabetical list of all 
+        Prints the total number of unique values and an alphabetical list of all
         unique values in a specified column.
 
     univariate(df, column):
-        Performs univariate analysis on a DataFrame column, including descriptive 
+        Performs univariate analysis on a DataFrame column, including descriptive
         statistics, skewness, kurtosis, and visualizations.
 """
-__all__ = ['install_packages', 'import_packages', 'extract', 'info', 'clean',
-           'unique_count_all_columns', 'unique_count_top_10', 'unique_count',
-           'unique_count_sorted', 'fill_with_mean', 'univariate', 'bivariate',
-           'multivariate']
+
+__all__ = [
+    "install_packages",
+    "import_packages",
+    "extract",
+    "info",
+    "clean",
+    "unique_count_all_columns",
+    "unique_count_top_10",
+    "unique_count_single_column",
+    "unique_count_sorted",
+    "fill_with_mean",
+    "univariate",
+    "bivariate",
+    "multivariate",
+]
 
 # Imports
 import subprocess
@@ -358,7 +370,7 @@ def unique_count_top_10(df, column_name):
         print(f"Column '{column_name}' does not exist in the DataFrame.")
 
 
-def unique_count(df, column_name):
+def unique_count_single_column(df, column_name):
     """
     Prints the count and percentage of unique values in a specified column.
 
@@ -422,39 +434,42 @@ def fill_with_mean(df, column_name, decimals=None):
     """
     Fills missing values in the specified column with the mean value of that column in place.
     Also stores a binary flag indicating if the column had missing values and was filled.
-    
+
     Parameters:
     - df: pandas DataFrame
     - column_name: str, the name of the column to fill
     - decimals: int, optional, the number of decimal places to round the mean value. Default is None (no rounding).
-    
+
     Returns:
     - str: confirmation message including the mean value used and a statement about whether the column was filled,
       along with the binary flag column name.
     """
     # Create the binary flag column before filling missing values
-    flag_column_name = f'{column_name}_missing'
+    flag_column_name = f"{column_name}_missing"
     df[flag_column_name] = df[column_name].isnull().astype(int)
-    
+
     # Check if there are any missing values in the column
     had_missing_values = df[column_name].isnull().sum() > 0
-    
+
     # Calculate the mean value of the column
     mean_value = df[column_name].mean()
-    
+
     if decimals is not None:
         mean_value = f"{mean_value:.{decimals}f}"
-    
+
     # Fill missing values with the mean value
     df[column_name] = df[column_name].fillna(float(mean_value))
-    
+
     # Return a message with the relevant details
     if had_missing_values:
-        return f"Column '{column_name}' has been filled with the mean value: {mean_value}. " \
-               f"Column: '{flag_column_name}' has been created."
+        return (
+            f"Column '{column_name}' has been filled with the mean value: {mean_value}. "
+            f"Column: '{flag_column_name}' has been created."
+        )
     else:
-        return f"Column '{column_name}' did not have missing values, no filling necessary."
-
+        return (
+            f"Column '{column_name}' did not have missing values, no filling necessary."
+        )
 
 
 def univariate(df, column):
@@ -521,11 +536,14 @@ def univariate(df, column):
     else:
         print("Unrecognized type or empty column.")
 
+
 def bivariate():
     pass
 
+
 def multivariate():
     pass
+
 
 globals().update({k: v for k, v in locals().items() if callable(v)})
 # This line ensures that all functions are accessible at the module level
