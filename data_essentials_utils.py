@@ -43,6 +43,10 @@ Functions:
         Performs univariate analysis on a DataFrame column, including descriptive 
         statistics, skewness, kurtosis, and visualizations.
 """
+__all__ = ['install_packages', 'import_packages', 'extract', 'info', 'clean',
+           'unique_count_all_columns', 'unique_count_top_10', 'unique_count',
+           'unique_count_sorted', 'fill_with_mean', 'univariate', 'bivariate',
+           'multivariate']
 
 # Imports
 import subprocess
@@ -53,6 +57,7 @@ import ast
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
 
 def install_packages(packages):
@@ -180,25 +185,28 @@ def extract(file_path):
         pd.DataFrame or None: DataFrame if extraction is successful, None if it fails.
     """
     try:
+        base_name = os.path.basename(file_path)
+        file_name = os.path.splitext(base_name)[0]
+
         if file_path.endswith(".csv"):
             df = pd.read_csv(file_path)
-            print("CSV data extraction successful.")
+            print(f"CSV {file_name} data extraction successful.")
         elif file_path.endswith(".json.gz"):
             with gzip.open(file_path, "rb") as file:
                 data = [json.loads(row) for row in file]
             df = pd.DataFrame(data)
-            print("Gzip JSON data extraction successful.")
+            print(f"Gzip JSON {file_name} data extraction successful.")
         elif file_path.endswith(".json"):
             df = pd.read_json(file_path, lines=True)
-            print("JSON data extraction successful.")
+            print(f"JSON {file_name} data extraction successful.")
         elif file_path.endswith(".ast.gz"):
             with gzip.open(file_path, "rb") as file:
                 data = [ast.literal_eval(row.decode("utf-8")) for row in file]
             df = pd.DataFrame(data)
-            print("AST Gzip data extraction successful.")
+            print(f"AST Gzip {file_name} data extraction successful.")
         elif file_path.endswith(".parquet"):
             df = pd.read_parquet(file_path)
-            print("Parquet data extraction successful.")
+            print(f"Parquet {file_name} data extraction successful.")
         else:
             print(f"Unsupported file format: {file_path}")
             return None
@@ -519,3 +527,6 @@ def bivariate():
 def multivariate():
     pass
 
+globals().update({k: v for k, v in locals().items() if callable(v)})
+# This line ensures that all functions are accessible at the module level
+# and can be imported directly without needing to reference the module name.
